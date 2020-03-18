@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { Helmet } from "react-helmet";
 
 import HeaderContainer from "./containers/HeaderContainer";
@@ -40,6 +40,11 @@ const init = () => {
     window.tsQeditor.init(function() {});
 
     editorLoad(0);
+
+    //Todo...
+    document.getElementById("vertical-tab-1").style.display = "block"; // asset
+    document.getElementById("vertical-tab-2").style.display = "block"; // subject
+    document.getElementById("vertical-tab-3").style.display = "block"; // sentence
   });
 };
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -16,6 +16,9 @@ import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 import AttachFileIcon from "@material-ui/icons/AttachFile";
 
 import Editor from "../components/Editor";
+import Asset from "../components/Asset";
+import Subject from "../components/Subject";
+import Sentence from "../components/Sentence";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -108,12 +111,18 @@ const useStyles = makeStyles(theme => ({
   fileIcon: {
     color: "rgb(36,62,83)",
     display: "none"
+  },
+  panel: {
+    display: "none"
   }
 }));
 
 const EditorContainer = React.forwardRef((props, ref) => {
-  const classes = useStyles(),
-    [value, setValue] = React.useState(0);
+  const classes = useStyles();
+  const [value, setValue] = React.useState(0);
+  const refAsset = useRef();
+  const refSubject = useRef();
+  const refSentence = useRef();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -125,6 +134,17 @@ const EditorContainer = React.forwardRef((props, ref) => {
       "qsetUi"
     );
     document.getElementById("console").innerHTML = "";
+  };
+
+  const onClickTab = index => {
+    let arrList = [ref, refAsset, refSubject, refSentence];
+    for (let i = 0; i < arrList.length; i++) {
+      if (i === index) {
+        arrList[i].current.style.display = "block";
+      } else {
+        arrList[i].current.style.display = "none";
+      }
+    }
   };
 
   // const [metaPlugin, setMetaPlugin] = React.useState([]);
@@ -161,26 +181,34 @@ const EditorContainer = React.forwardRef((props, ref) => {
         >
         <Tab
           icon={<CreateIcon />}
+          style={{ display: "block" }}
           className={value !== 0 ? classes.tab : classes.activeTab}
           label="Editor"
+          onClick={() => onClickTab(0)}
           {...a11yProps(0)}
         />
         <Tab
           icon={<ImageIcon />}
+          style={{ display: "none" }}
           className={value !== 1 ? classes.tab : classes.activeTab}
           label="Asset"
+          onClick={() => onClickTab(1)}
           {...a11yProps(1)}
         />
         <Tab
           icon={<SubjectIcon />}
+          style={{ display: "none" }}
           className={value !== 2 ? classes.tab : classes.activeTab}
           label="Subject"
+          onClick={() => onClickTab(2)}
           {...a11yProps(2)}
         />
         <Tab
           icon={<SpellcheckIcon />}
+          style={{ display: "none" }}
           className={value !== 3 ? classes.tab : classes.activeTab}
           label="Sentence"
+          onClick={() => onClickTab(3)}
           {...a11yProps(3)}
         />
       </Tabs>
@@ -213,7 +241,12 @@ const EditorContainer = React.forwardRef((props, ref) => {
           </Toolbar>
         </AppBar>
 
-        <TabPanel value={value} index={0}>
+        <Editor ref={ref} />
+        <Asset ref={refAsset} className={classes.panel} />
+        <Subject ref={refSubject} className={classes.panel} />
+        <Sentence ref={refSentence} className={classes.panel} />
+
+        {/* <TabPanel value={value} index={0}>
           <Editor ref={ref} />
         </TabPanel>
         <TabPanel value={value} index={1}>
@@ -224,7 +257,7 @@ const EditorContainer = React.forwardRef((props, ref) => {
         </TabPanel>
         <TabPanel value={value} index={3}>
           sub3
-        </TabPanel>
+        </TabPanel> */}
       </div>
     </div>
   );

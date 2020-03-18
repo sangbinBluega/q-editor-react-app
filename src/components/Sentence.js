@@ -11,28 +11,23 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const EditorComponent = React.forwardRef((props, ref) => {
+const SentenceComponent = React.forwardRef((props, sentenceRef) => {
   const classes = useStyles();
-
-  const editorOnLoad = () => {
-    window.tsQeditor.fileLoad();
-  };
 
   return (
     <Paper
-      id="editorIF"
-      ref={ref}
+      id="assetManager"
+      ref={sentenceRef}
       component="iframe"
       frameBorder="no"
       scrolling="yes"
       classes={{ root: classes.iframe }}
       src={
-        window.tsQeditor.get("plugin", "editor")[0] &&
-        window.tsQeditor.get("plugin", "editor")[0].url
+        window.tsQeditor.get("plugin", "sentenceManager") &&
+        window.tsQeditor.get("plugin", "sentenceManager").url
       }
-      onLoad={editorOnLoad}
     ></Paper>
   );
 });
 
-export default EditorComponent;
+export default SentenceComponent;
