@@ -186,8 +186,6 @@ tsQeditor.metaTag = function(/*{}*/ q /*{key:value, ...}*/) {
   //  Asset 부분
   var item;
 
-  console.error("q : ", q);
-
   for (var i = 0; i < q.Body.length; i++) {
     for (var j = 0; j < q.Body[i].Content.length; j++) {
       if ((item = q.Body[i].Content[j])) {

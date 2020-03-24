@@ -49,8 +49,12 @@ TabPanel.propTypes = {
 };
 
 function a11yProps(index) {
+  let metaList = ["editor", "asset", "subject", "sentence"];
+
+  // id: `vertical-tab-${index}`,
+
   return {
-    id: `vertical-tab-${index}`,
+    id: `plugin/${metaList[index]}`,
     "aria-controls": `vertical-tabpanel-${index}`
   };
 }
@@ -129,6 +133,7 @@ const EditorContainer = React.forwardRef((props, ref) => {
   };
 
   const onClickRun = () => {
+    document.getElementById("qset").style.display = "block";
     document.getElementById("qset").src = window.tsQeditor.get(
       "plugin",
       "qsetUi"
@@ -147,23 +152,24 @@ const EditorContainer = React.forwardRef((props, ref) => {
     }
   };
 
-  // const [metaPlugin, setMetaPlugin] = React.useState([]);
-
   useEffect(() => {
-    // const metaList = window.tsQeditor.metaPluginList;
-    // if (!metaList) {
-    //   return;
-    // }
-    // let arrList = [];
-    // metaList.forEach(function(item) {
-    //   if (window.tsQeditor.get("plugin", item)) {
-    //     arrList.push({
-    //       type: item,
-    //       url: window.tsQeditor.get("plugin", item).url
-    //     });
-    //   }
-    // });
-    // setMetaPlugin(arrList);
+    if (props.reset) {
+      setValue(0);
+      props.resetFunction(false);
+    }
+
+    window.addEventListener("message", function(ev) {
+      if (ev.data && ev.data.mqfEditor) {
+        var event = ev.data.mqfEditor.event;
+        var data = ev.data.mqfEditor.data;
+
+        if (event === "showButton") {
+          document.getElementById(`plugin/${data}`).style.display = "block";
+        } else if (event === "hideButton") {
+          document.getElementById(`plugin/${data}`).style.display = "none";
+        }
+      }
+    });
   });
 
   return (

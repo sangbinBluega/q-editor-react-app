@@ -5,7 +5,7 @@ import Paper from "@material-ui/core/Paper";
 const useStyles = makeStyles(theme => ({
   iframe: {
     width: "100%",
-    height: "100%",
+    height: "calc(100% - 50px)",
     borderRadius: "0px",
     boxShadow: "none"
   }

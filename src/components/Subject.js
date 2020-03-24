@@ -16,7 +16,7 @@ const SubjectComponent = React.forwardRef((props, subjectRef) => {
 
   return (
     <Paper
-      id="assetManager"
+      id="subjectManager"
       ref={subjectRef}
       component="iframe"
       frameBorder="no"

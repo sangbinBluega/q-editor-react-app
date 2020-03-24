@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import HeaderContainer from "./containers/HeaderContainer";
@@ -10,43 +10,6 @@ import SplitterLayout from "react-splitter-layout";
 import "react-splitter-layout/lib/index.css";
 
 import "./styles/App.scss";
-
-const init = () => {
-  window.tsQeditor.set("file", "onOpen", function(
-    /*{}*/ Q,
-    /*String*/ fileOrg,
-    /*String*/ fileName
-  ) {
-    //  파일 정보 지정
-    window.tsQeditor.Q = Q;
-    window.tsQeditor.fileName = fileName;
-
-    //  저장 버튼 활성화
-    document.getElementById("menuBtnFileSave").style.display = "block";
-
-    //  File을 Editor 등으로 로드
-    window.tsQeditor.fileLoad();
-
-    //  File 실행
-    qsetUiRun();
-
-    //File 이름 표시
-    document.getElementById("statusFileName").innerHTML = fileName || "";
-
-    document.getElementById("fileIcon").style.display = "block";
-    document.getElementById("runButton").style.display = "block";
-
-    //  Start
-    window.tsQeditor.init(function() {});
-
-    editorLoad(0);
-
-    //Todo...
-    document.getElementById("vertical-tab-1").style.display = "block"; // asset
-    document.getElementById("vertical-tab-2").style.display = "block"; // subject
-    document.getElementById("vertical-tab-3").style.display = "block"; // sentence
-  });
-};
 
 const editorLoad = idx => {
   document.getElementById("editorIF").src = window.tsQeditor.get(
@@ -89,16 +52,64 @@ function App() {
   const refLayoutLeft = useRef();
   const refLayoutRight = useRef();
 
-  init();
+  const [resetBool, setResetBool] = useState(false);
+
+  //init();
+  window.tsQeditor.set("file", "onOpen", function(
+    /*{}*/ Q,
+    /*String*/ fileOrg,
+    /*String*/ fileName
+  ) {
+    //  파일 정보 지정
+    window.tsQeditor.Q = Q;
+    window.tsQeditor.fileName = fileName;
+
+    //  저장 버튼 활성화
+    document.getElementById("menuBtnFileSave").style.display = "block";
+
+    //  File을 Editor 등으로 로드
+    window.tsQeditor.fileLoad();
+
+    //  File 실행
+    qsetUiRun();
+
+    //File 이름 표시
+    document.getElementById("statusFileName").innerHTML = fileName || "";
+
+    document.getElementById("fileIcon").style.display = "block";
+    document.getElementById("runButton").style.display = "block";
+
+    document.getElementById("assetManager").style.display = "none";
+    document.getElementById("sentenceManager").style.display = "none";
+    document.getElementById("subjectManager").style.display = "none";
+    document.getElementById("editorIF").style.display = "block";
+
+    //  Start
+    window.tsQeditor.init(function() {});
+
+    editorLoad(0);
+
+    setResetBool(true);
+  });
+
+  const fileLoadReset = bool => {
+    setResetBool(bool);
+  };
 
   const onDragStart = () => {
     refEditor.current.style.pointerEvents = "none";
     refView.current.style.pointerEvents = "none";
+    document.getElementById("assetManager").style.pointerEvents = "none";
+    document.getElementById("subjectManager").style.pointerEvents = "none";
+    document.getElementById("sentenceManager").style.pointerEvents = "none";
   };
 
   const onDragEnd = () => {
     refEditor.current.style.pointerEvents = "";
     refView.current.style.pointerEvents = "";
+    document.getElementById("assetManager").style.pointerEvents = "";
+    document.getElementById("subjectManager").style.pointerEvents = "";
+    document.getElementById("sentenceManager").style.pointerEvents = "";
 
     let rightPaneWidth = refLayoutLeft.current.container
       .getElementsByClassName("layout-pane")[1]
@@ -136,7 +147,11 @@ function App() {
             onSecondaryPaneSizeChange={onChangeCourse}
             customClassName="leftLayout"
           >
-            <EditorContainer ref={refEditor} runFunction={qsetUiRun} />
+            <EditorContainer
+              ref={refEditor}
+              reset={resetBool}
+              resetFunction={fileLoadReset}
+            />
             <SplitterLayout
               ref={refLayoutRight}
               vertical

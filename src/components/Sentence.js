@@ -16,7 +16,7 @@ const SentenceComponent = React.forwardRef((props, sentenceRef) => {
 
   return (
     <Paper
-      id="assetManager"
+      id="sentenceManager"
       ref={sentenceRef}
       component="iframe"
       frameBorder="no"
