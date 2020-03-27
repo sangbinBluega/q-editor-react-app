@@ -11,6 +11,43 @@ import "react-splitter-layout/lib/index.css";
 
 import "./styles/App.scss";
 
+window.tsQeditor.set("file", "onOpen", function(
+  /*{}*/ Q,
+  /*String*/ fileOrg,
+  /*String*/ fileName
+) {
+  //  파일 정보 지정
+  window.tsQeditor.Q = Q;
+  window.tsQeditor.fileName = fileName;
+
+  //  저장 버튼 활성화
+  document.getElementById("menuBtnFileSave").style.display = "block";
+
+  //  File을 Editor 등으로 로드
+  //window.tsQeditor.fileLoad();
+
+  //  File 실행
+  qsetUiRun();
+
+  //File 이름 표시
+  document.getElementById("statusFileName").innerHTML = fileName || "";
+
+  document.getElementById("fileIcon").style.display = "block";
+  document.getElementById("runButton").style.display = "block";
+
+  document.getElementById("assetManager").style.display = "none";
+  document.getElementById("sentenceManager").style.display = "none";
+  document.getElementById("subjectManager").style.display = "none";
+  document.getElementById("editorIF").style.display = "block";
+
+  //  Start
+  window.tsQeditor.init(function() {});
+
+  editorLoad(0);
+
+  //setResetBool(true);
+});
+
 const editorLoad = idx => {
   document.getElementById("editorIF").src = window.tsQeditor.get(
     "plugin",
@@ -55,42 +92,6 @@ function App() {
   const [resetBool, setResetBool] = useState(false);
 
   //init();
-  window.tsQeditor.set("file", "onOpen", function(
-    /*{}*/ Q,
-    /*String*/ fileOrg,
-    /*String*/ fileName
-  ) {
-    //  파일 정보 지정
-    window.tsQeditor.Q = Q;
-    window.tsQeditor.fileName = fileName;
-
-    //  저장 버튼 활성화
-    document.getElementById("menuBtnFileSave").style.display = "block";
-
-    //  File을 Editor 등으로 로드
-    window.tsQeditor.fileLoad();
-
-    //  File 실행
-    qsetUiRun();
-
-    //File 이름 표시
-    document.getElementById("statusFileName").innerHTML = fileName || "";
-
-    document.getElementById("fileIcon").style.display = "block";
-    document.getElementById("runButton").style.display = "block";
-
-    document.getElementById("assetManager").style.display = "none";
-    document.getElementById("sentenceManager").style.display = "none";
-    document.getElementById("subjectManager").style.display = "none";
-    document.getElementById("editorIF").style.display = "block";
-
-    //  Start
-    window.tsQeditor.init(function() {});
-
-    editorLoad(0);
-
-    setResetBool(true);
-  });
 
   const fileLoadReset = bool => {
     setResetBool(bool);
